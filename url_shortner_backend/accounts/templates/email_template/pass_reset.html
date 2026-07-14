@@ -1,0 +1,29 @@
+{% block subject %}
+Password Reset
+{% endblock %}
+
+{% block text_body %}
+Hello,
+
+Please click the link below to reset your password:
+
+{{ protocol }}://{{ domain }}/password/reset/confirm/{{ uid }}/{{ token }}/
+
+If you didn't request this, ignore this email.
+{% endblock %}
+
+{% block html_body %}
+<h2>Password Reset</h2>
+
+<p>Hello,</p>
+
+<p>Click the button below to reset your password.</p>
+
+<p>
+    <a href="{{ protocol }}://{{ domain }}/password/reset/confirm/{{ uid }}/{{ token }}/">
+        Reset Password
+    </a>
+</p>
+
+<p>If you didn't request this, ignore this email.</p>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% block subject %}Your OTP Verification Code{% endblock %}
+
+{% block html_body %}
+<h2>OTP Verification</h2>
+
+<p>Hello,</p>
+
+<p>For your email {{ data.email }}, your OTP is:</p>
+
+<h1>{{ data.otp }}</h1>
+
+<p>Purpose: {{ data.purpose }}</p>
+
+<p>This OTP is valid for 7 minutes.</p>
+{% endblock %}
