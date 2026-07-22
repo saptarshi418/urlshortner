@@ -5,14 +5,25 @@ from urlApp.services.codeGenerator import CodeGenerator
 from django.utils import timezone
 from django.db import transaction
 import datetime
+from django.contrib.auth import get_user_model
+
+
+
+User = get_user_model()
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "first_name", "last_name", "email"]
 
 
 class CompressUrlSerializer(serializers.ModelSerializer):
     short_code = serializers.CharField(required=False,allow_null=True,allow_blank=True)
+    user = UserSerializer(read_only=True)
     class Meta:
         model = CompressUrl
         fields = ['id','user','original_url' ,'short_code' , 'expiry_date']
-        read_only_fields = ["user" , 'expiry_date']
+        read_only_fields = ['expiry_date']
 
     
     def create(self, validated_data):
@@ -20,7 +31,7 @@ class CompressUrlSerializer(serializers.ModelSerializer):
         request = self.context["request"]
 
         validated_data["user"] = request.user
-        validated_data["expiry_date"] = timezone.now() + timedelta(days=30)
+        validated_data["expiry_date"] = (timezone.now() + timedelta(days=30)).date()
         validated_data['max_clicks'] = 0
         validated_data['user_request_speacial'] = False
 
@@ -104,7 +115,7 @@ class AnnonymusCompressUrlSerializer(serializers.ModelSerializer):
         fields = ['original_url' , "short_code"]
     
     def create(self, validated_data):
-        validated_data["expiry_date"] = timezone.now() + timedelta(days=15)
+        validated_data["expiry_date"] = (timezone.now() + timedelta(days=15)).date()
         validated_data['max_clicks'] = 0
         validated_data['user_request_speacial'] = False
         status, value = CodeGenerator.generate_short_code()

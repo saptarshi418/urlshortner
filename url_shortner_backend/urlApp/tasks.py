@@ -1,3 +1,5 @@
+#urlApp/tasks.py
+
 from time import sleep
 from celery import shared_task
 from django.db import connection

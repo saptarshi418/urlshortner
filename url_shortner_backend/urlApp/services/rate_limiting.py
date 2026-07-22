@@ -19,7 +19,7 @@ class RateLimiter:
 
     @staticmethod
     def allow_logged_user(user , limit=5 , window=3600):
-        key = f'rate:user:{user}'
+        key = f'rate:user:{user.pk}'
         
 
         count = ratelimit_redis.incr(key)

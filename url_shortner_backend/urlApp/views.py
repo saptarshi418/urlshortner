@@ -3,19 +3,21 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny , IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.response import Response
 from rest_framework.views import APIView 
 from .serializers import CompressUrlSerializer , AnnonymusCompressUrlSerializer , UpdateUrlSerializers
 from .models import CompressUrl
+from .pagination import UrlPagination
 from urlApp.services.rate_limiting import RateLimiter
 from urlApp.services.get_ip import get_client_ip
 from urlApp.services.redis_client import url_redis , redirect_userdata_redis
+
 
 
 # Create your views here.
 
 
 class CompressUrlViewset(ModelViewSet):
+    pagination_class = UrlPagination
     http_method_names =[
         "get",
         "post",
@@ -42,7 +44,7 @@ class CompressUrlViewset(ModelViewSet):
     
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return CompressUrl.objects.filter(user = self.request.user)
+            return CompressUrl.objects.filter(user = self.request.user).select_related('user').order_by("-created_at")
         return CompressUrl.objects.none()
     
     
@@ -88,15 +90,18 @@ class UrlRedirectView(APIView):
         key = f"short_code:{short_code}"
         redis_long_url = url_redis.get(key)
         if redis_long_url:
-            return redirect(redis_long_url)
+            return Response({'original_url':redis_long_url} , status=status.HTTP_200_OK)
         
-        data = get_object_or_404(
-            CompressUrl,
+        data = CompressUrl.objects.filter(
             short_code=short_code,
-            is_active = True
-        )
+            is_active=True
+        ).first()
+        if not data:
+            return Response({'details':"Not Found"} , status=status.HTTP_404_NOT_FOUND)
+
+
         url_redis.set(key , data.original_url , ex=60*60*2)
-        return redirect(data.original_url)
+        return Response({'original_url':data.original_url} , status=status.HTTP_200_OK)
         
 
         

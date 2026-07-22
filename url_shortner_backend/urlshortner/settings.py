@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "phonenumber_field",
     "rest_framework",
+    "corsheaders",
     "django_extensions",
     'accounts',
     'urlApp',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -148,17 +150,18 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'accounts.User'
 
 DJOSER = {
+    "EMAIL_FRONTEND_DOMAIN": "localhost:5173",
+    "EMAIL_FRONTEND_PROTOCOL": "http",
+    "EMAIL_FRONTEND_SITE_NAME": "URL Shortener",
     "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
     "EMAIL": {
         "password_reset": "accounts.email.CustomPasswordResetEmail",
     },
-
-    'SERIALIZERS':{
+    'SERIALIZERS': {
         'user_create': 'accounts.serializers.UserCreateSerializer',
         'current_user': 'accounts.serializers.UserSerializer',
-        }
+    }
 }
-
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
@@ -212,7 +215,13 @@ CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{os.getenv('CELERY_BROKE
 
 CELERY_BEAT_SCHEDULE = {
     "deactivate-expired-urls": {
-        "task": "urlApp.tasks.deactivate_expired_urls",
+        "task": "urlApp.tasks.deactive_expire_url",
         "schedule": crontab(hour=0, minute=0),
     },
 }
+
+
+CORS_ALLOWED_ORIGIN_REGEXES = [    #all localhost port
+    r"^http://localhost:\d+$",
+    r"^http://127\.0\.0\.1:\d+$",
+]

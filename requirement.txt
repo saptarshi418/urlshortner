@@ -12,6 +12,7 @@ click-repl==0.3.0
 cryptography==49.0.0
 defusedxml==0.7.1
 Django==6.0.7
+django-cors-headers==4.9.0
 django-extensions==4.1
 django-ipware==7.0.1
 django-phonenumber-field==8.4.0

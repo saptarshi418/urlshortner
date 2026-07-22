@@ -22,10 +22,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('urlApp.urls')),
     path("auth/", include("djoser.urls")),
     path('auth/', include('djoser.urls.jwt')),
     path('register/' , RegisterViewSet.as_view()),
     path('verify-otp/' , VerifyOtpViewSet.as_view()),
+    path('', include('urlApp.urls')),
     
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
