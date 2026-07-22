@@ -3,3 +3,6 @@ env/
 idea.txt
 __pycache__/
 *.py[cod]
+
+celerybeat-schedule
+url_shortner_backend/celerybeat-schedule
