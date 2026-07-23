@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../services/config";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "lucide-react";
+import api from "../services/api";
 
 
 const Register = () => {
+
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -14,6 +17,31 @@ const Register = () => {
     password: "",
     confirm_password: "",
   });
+
+  const [isLoading, setIsLoading] = useState(true)
+
+   useEffect(()=>{                     // prevent logged user to access this endpoint 
+
+    const PreventLoggedUserHandler = async ()=>{
+      try {
+        const response = await api.get(`auth/users/me/`)
+        if (response.status == 200){
+          navigate(`/`)
+        }
+
+      }catch (error){
+        
+      }
+    }
+    PreventLoggedUserHandler();
+
+
+  },[])   
+
+  
+
+
+
 
   const navigate = useNavigate()
 
@@ -36,6 +64,15 @@ const Register = () => {
    
     console.log(formData);
   };
+
+
+   if (isLoading) {
+          return (
+              <div className="min-h-screen flex items-center justify-center">
+                  <Loader className="animate-spin" size={40} />
+              </div>
+          );
+    }
 
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-center px-4 py-8">

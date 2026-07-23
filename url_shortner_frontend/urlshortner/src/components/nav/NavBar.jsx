@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 const NavBar = ({ isLogged }) => {
+
     const navigate = useNavigate()
 
     const myUrlsHandler = ()=>{
@@ -22,6 +23,11 @@ const NavBar = ({ isLogged }) => {
     const redirectToHome = ()=>{
         navigate('/')
     }
+
+    const redirectLoginHandler = ()=>{
+        navigate('/login')
+    }
+    
 
 
     return (
@@ -55,6 +61,7 @@ const NavBar = ({ isLogged }) => {
                             size={40}
                             color="#fff"
                             className="cursor-pointer"
+                            onClick={redirectLoginHandler}
                         />
                     )}
                 </div>

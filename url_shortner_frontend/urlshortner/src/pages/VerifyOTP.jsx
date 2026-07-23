@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../services/config";
+import { Loader } from "lucide-react";
+import api from "../services/api";
+
 
 
 
@@ -9,8 +12,32 @@ import { API_BASE_URL } from "../services/config";
 const VerifyOtp = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [isLoading, setIsLoading] = useState(true)
 
   const navigate = useNavigate();
+
+
+  useEffect(()=>{                     // prevent logged user to access this endpoint 
+
+    const PreventLoggedUserHandler = async ()=>{
+      try {
+        const response = await api.get(`auth/users/me/`)
+        if (response.status == 200){
+          navigate(`/`)
+        }
+
+      }catch (error){
+        
+      }finally{
+      setIsLoading(false);
+    }
+    }
+    PreventLoggedUserHandler();
+
+
+  },[])  
+
+
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -34,6 +61,15 @@ const VerifyOtp = () => {
     }
     
   };
+
+
+  if (isLoading) {
+            return (
+                <div className="min-h-screen flex items-center justify-center">
+                    <Loader className="animate-spin" size={40} />
+                </div>
+            );
+      }
 
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-center px-4">

@@ -4,11 +4,13 @@ import Home from './pages/Home'
 import RedirectPage from './pages/RedirectPage';
 import NotFound from './pages/NotFound';
 import MyUrls from './pages/MyUrls';
+import MyProfile from './pages/MyProfile';
 import LoginPage from './pages/LoginPage';
 import Register from './pages/Register';
 import VerifyOtp from './pages/VerifyOTP';
-import ResetPassword from './pages/ResetPassword'
-import MyProfile from './pages/MyProfile';
+import ResetPassword from './pages/ResetPassword';
+import ConfirmResetPassword from './pages/ConfirmResetPassword';
+
 
 
 
@@ -24,7 +26,9 @@ const App = () => {
       <Route path="/register" element={<Register/>}/>
       <Route path="/verify" element={<VerifyOtp/>}/>
       <Route path="/my-profile" element={<MyProfile/>}/>
-      <Route path="/password/reset/confirm/:uid/:token/" element={<ResetPassword/>}/>
+      <Route path="/password/reset/" element={<ResetPassword/>}/>
+
+      <Route path="/password/reset/confirm/:uid/:token/" element={<ConfirmResetPassword/>}/>
 
 
 

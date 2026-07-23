@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams , useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API_BASE_URL } from "../services/config";
+
 
 
 const ConfirmResetPassword = () => {
@@ -7,6 +10,7 @@ const ConfirmResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const { uid, token } = useParams();
+  const navigate = useNavigate()
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -21,11 +25,34 @@ const ConfirmResetPassword = () => {
       return;
     }
 
-    // Password reset confirmation API call
-    console.log({
-      password,
-      confirmPassword,
-    });
+    const payload = {};
+    payload.uid = uid;
+    payload.token = token ;
+    payload.new_password = password;
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/users/reset_password_confirm/`, payload)
+      console.log(response);
+      
+      alert(`Your password is updated.`)
+      if(localStorage.getItem(`access`)){
+        localStorage.removeItem('access')
+      }
+      if(localStorage.getItem(`refresh`)){
+        localStorage.removeItem('refresh')
+      }
+      navigate(`/login`)
+      
+      
+      
+
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+
+
   };
 
   return (
