@@ -186,14 +186,14 @@ celery -A urlshortner beat --loglevel=info
 
 ---
 
-## 9. Start Redis and smtp 
+## 9. Start Redis 
 
 ```bash
 docker run -d -p 6379:6379 redis 
 ```
 
 ---
-## 10. Start Redis and smtp 
+## 10. Start smtp 
 
 ```bash
 docker run --rm -it -p 5000:80 -p 2525:25 -p 110:110 rnwood/smtp4dev
